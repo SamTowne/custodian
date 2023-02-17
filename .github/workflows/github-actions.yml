@@ -65,3 +65,37 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+
+  build:
+    name: 'Build Lambda Package'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Build Lambda Package
+        run:
+          echo "building lambda package..." 
+          # mkdir app
+          # mkdir app/build
+          # pip install --target app/build/python --verbose --no-cache-dir c7n --upgrade
+          # cp -r processor/* app/build/python
+
+  test:
+    name: 'test c7n policies'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+      
+    steps:
+      - name: Build Lambda Package
+        run:
+          echo "validating c7n policies..."
+          # pip install c7n
+          # pip install c7n-awscc
+          # echo "running unit tests..."
+          # python3 -m unittest discover -s processor/ -p '*_test.py'
