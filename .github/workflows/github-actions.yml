@@ -16,9 +16,9 @@ jobs:
     name: 'TF GitHub Actions'
     runs-on: ubuntu-latest
     environment: production
-
     defaults:
       run:
+        working-directory: ./infra
         shell: bash
 
     steps:
@@ -45,7 +45,7 @@ jobs:
       id: fmt
       run: terraform fmt -check
       env:
-        TF_ACTION_WORKING_DIR: ./infra
+        TF_ACTION_WORKING_DIR: .
       continue-on-error: true
 
     - name: Terraform Validate
