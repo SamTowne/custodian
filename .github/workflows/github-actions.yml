@@ -41,21 +41,27 @@ jobs:
       id: init
       run: terraform init
       env:
-        TF_ACTION_WORKING_DIR: .
+        TF_ACTION_WORKING_DIR: infrastructure/
 
     - name: Terraform Format
       id: fmt
       run: terraform fmt -check
+      env:
+        TF_ACTION_WORKING_DIR: infrastructure/
       continue-on-error: true
 
     - name: Terraform Validate
       id: validate
       run: terraform validate -no-color
+      env:
+        TF_ACTION_WORKING_DIR: infrastructure/
 
     - name: Terraform Plan
       id: plan
       if: github.event_name == 'pull_request'
       run: terraform plan -no-color
+      env:
+        TF_ACTION_WORKING_DIR: infrastructure/
       continue-on-error: true
 
     - name: Terraform Plan Status
@@ -65,3 +71,5 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+      env:
+        TF_ACTION_WORKING_DIR: infrastructure/
