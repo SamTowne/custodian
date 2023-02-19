@@ -27,8 +27,7 @@ name = "${var.project_prefix}-github-oidc"
 assume_role_policy = data.aws_iam_policy_document.github.json
 }
 
-resource "aws_iam_policy_attachment" "AdministratorAccess" {
-  name       = "AdministratorAccess"
-  roles      = [aws_iam_role.github.name]
+resource "aws_iam_role_policy_attachment" "AdministratorAccess" {
+  role       = aws_iam_role.github.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
