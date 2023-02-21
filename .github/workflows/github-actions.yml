@@ -13,6 +13,7 @@ on:
 
 jobs:
   terraform:
+    if: ${{ !github.event.act }} # skip during local actions testing
     name: 'TF GitHub Actions'
     runs-on: ubuntu-latest
     environment: production
@@ -65,3 +66,60 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+
+  build:
+    name: 'Build Lambda Package'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+    - name: Build Lambda Package
+      run: |
+        echo "building lambda package(s)..."
+        mkdir app
+        mkdir app/build
+        pip install --target app/build/python --verbose --no-cache-dir c7n --upgrade
+        echo "c7n installed..."
+        ls -lsta app/build/python
+        cp -r services/processor/* app/build/python
+        echo "lambda package contents..."
+        ls -lsta app/build/python
+        echo "compressing package contents..."
+        zip -r app.zip app/build/python
+    
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
+        aws-region: us-west-2 #CONFIGURE THIS
+        role-duration-seconds: 900
+    
+    - name: Upload Lambda Package
+      run: |
+        echo "Uploading lambda package..."
+        pip install awscli
+        aws s3 put-object --body app.zip --bucket arn:aws:s3:::cloud-custodian-lambda-packages-272773485930 --key lambda_packages/processor/app.zip
+
+  test:
+    name: 'Validate c7n policies'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: c7n validate policies
+        run:
+          echo "validating c7n policies..."
+          custodian validate services/processor/policies/**

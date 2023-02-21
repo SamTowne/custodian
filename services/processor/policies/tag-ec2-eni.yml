@@ -1,0 +1,15 @@
+ - name: tag-compliance
+   resource: aws.ec2
+   description: |
+     Schedule a resource that does not meet tag compliance policies to be stopped in four days. Note a separate policy using the`marked-for-op` filter is required to actually stop the instances after four days.
+   filters:
+    - State.Name: running
+    - "tag:Environment": absent
+    - "tag:AppId": absent
+    - or:
+      - "tag:OwnerContact": absent
+      - "tag:DeptID": absent
+   actions:
+    - type: mark-for-op
+      op: stop
+      days: 4
