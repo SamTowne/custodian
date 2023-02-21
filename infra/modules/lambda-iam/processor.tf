@@ -32,7 +32,6 @@ data "aws_iam_policy_document" "processor_policy" {
     }
 
     statement {
-      sid = "cloud custodian s3 access"
       actions = [
         "s3:List*",
         "s3:PutObject*",
@@ -41,7 +40,6 @@ data "aws_iam_policy_document" "processor_policy" {
       resources = ["arn:aws:s3:::cloud-custodian*"]
     }
     statement {
-      sid = "cloud custodian sqs access"
       actions = [
         "sqs:ReceiveMessage*",
         "sqs:DeleteMessage",
