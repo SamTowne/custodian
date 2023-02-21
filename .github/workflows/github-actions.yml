@@ -108,7 +108,7 @@ jobs:
       run: |
         echo "Uploading lambda package..."
         pip install awscli
-        aws s3 cp app.zip arn:aws:s3:::cloud-custodian-lambda-packages-272773485930:/lambda_packages/processor/app.zip --region us-west-2
+        aws s3 cp app.zip s3://cloud-custodian-lambda-packages-272773485930/lambda_packages/processor/app.zip --region us-west-2
 
   test:
     name: 'Validate c7n policies'
