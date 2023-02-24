@@ -80,7 +80,8 @@ jobs:
       with:
           fetch-depth: 2
     - id: services_diff
-      run: ::set-output name=services_diff::git diff --name-only HEAD^ HEAD | awk '{split($0,a,"services"); {split($0,b,"/"); print b[2]}}' | uniq
+    # git diff --name-only github.sha^ github.sha | awk '{split($0,a,"services"); {split($0,b,"/"); print b[2]}}' | uniq
+      run: echo "services_diff=" | git diff --name-only HEAD^ HEAD | awk '{split($0,a,"services"); {split($0,b,"/"); print b[2]}}' | uniq >> $GITHUB_OUTPUT
     - name: Read output
       run: |
         echo 'Found diff in these services:'

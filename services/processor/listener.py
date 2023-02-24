@@ -10,4 +10,4 @@ def listener(event, context):
     return {"statusCode": 200}
 
 def health(val):
-    return val#
+    return val
