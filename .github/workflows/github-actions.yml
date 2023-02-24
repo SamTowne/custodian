@@ -67,48 +67,70 @@ jobs:
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
 
-  build:
-    name: 'Build Lambda Package'
+  services_diff:
+    name: 'Check services for diff'
     runs-on: ubuntu-latest
     environment: production
     defaults:
       run:
         shell: bash
-
     steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        fetch-depth: 2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: Build Lambda Package
+          fetch-depth: 2
+    - id: services_diff
+      run: ::set-output name=services_diff::git diff --name-only HEAD^ HEAD | awk '{split($0,a,"services"); {split($0,b,"/"); print b[2]}}' | uniq
+    - name: Read output
       run: |
-        echo "building lambda package(s)..."
-        mkdir app
-        mkdir app/build
-        pip install --target app/build/python --verbose --no-cache-dir c7n --upgrade
-        echo "c7n installed..."
-        ls -lsta app/build/python
-        cp -r services/processor/* app/build/python
-        echo "lambda package contents..."
-        ls -lsta app/build/python
-        echo "compressing package contents..."
-        zip -r app.zip app/build/python
-    
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
-        aws-region: us-west-2 #CONFIGURE THIS
-        role-duration-seconds: 900
-    
-    - name: Upload Lambda Package
-      run: |
-        echo "Uploading lambda package..."
-        pip install awscli
-        aws s3 cp app.zip s3://cloud-custodian-lambda-packages-272773485930/lambda_packages/processor/app.zip --region us-west-2
+        echo 'Found diff in these services:'
+        echo '${{steps.services_diff.outputs.services_diff}}'
+    outputs:
+      services_diff: ${{steps.services_diff.outputs.services_diff}}
+  
+  build:
+    name: 'Build Lambda Packages'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+    needs: services_diff
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Build Lambda Package
+        run: |
+          echo "services to build: "
+          echo "${{needs.services_diff.outputs.services_diff}}"
+          echo "building lambda package(s)..."
+          mkdir app
+          mkdir app/build
+          pip install --target app/build/python --verbose --no-cache-dir c7n --upgrade
+          echo "c7n installed..."
+          ls -lsta app/build/python
+          cp -r services/processor/* app/build/python
+          echo "lambda package contents..."
+          ls -lsta app/build/python
+          echo "compressing package contents..."
+          zip -r app.zip app/build/python
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
+          aws-region: us-west-2 #CONFIGURE THIS
+          role-duration-seconds: 900
+      
+      - name: Upload Lambda Package
+        run: |
+          echo "Uploading lambda package..."
+          pip install awscli
+          aws s3 cp app.zip s3://cloud-custodian-lambda-packages-272773485930/lambda_packages/processor/app.zip --region us-west-2
 
   test:
     name: 'Validate c7n policies'
