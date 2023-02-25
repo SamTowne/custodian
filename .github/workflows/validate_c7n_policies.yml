@@ -1,0 +1,34 @@
+name: 'Validate c7n Policies'
+permissions:
+  contents: read # required to checkout the code from the repo
+
+env:
+  POLICIES_PATH: services/processor/policies/**
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+    - $POLICIES_PATH
+  pull_request:
+    branches:
+      - "main"
+    paths:
+    - $POLICIES_PATH
+  
+jobs:
+  test:
+    name: 'Validate c7n policies'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: c7n validate policies
+        run:
+          echo "validating c7n policies..."
+          pip install c7n
+          custodian validate $POLICIES_PATH
