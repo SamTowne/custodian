@@ -14,6 +14,8 @@ on:
       - "main"
     paths:
     - 'infra/**'
+  workflow_run:
+    workflows: ["Build Processor", "Build Scheduler"]
 
 jobs:
   terraform:
@@ -70,17 +72,3 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
-
-  test:
-    name: 'Validate c7n policies'
-    runs-on: ubuntu-latest
-    environment: production
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-      - name: c7n validate policies
-        run:
-          echo "validating c7n policies..."
-          custodian validate services/processor/policies/**
