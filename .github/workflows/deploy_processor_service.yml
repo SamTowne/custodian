@@ -11,11 +11,12 @@ env:
   S3_BUCKET_NAME: cloud-custodian-lambda-packages-272773485930
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
-      - "main"
-    paths:
-    - 'services/$SERVICE_NAME/**'
+      - main
   
 jobs:
   build-processor:
