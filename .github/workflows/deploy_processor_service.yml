@@ -4,7 +4,6 @@ permissions:
   contents: read # required to checkout the code from the repo
 
 env:
-  PYTHON_VERSION: "3.10"
   OIDC_IAM_ROLE: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
   AWS_REGION: us-west-2
   SERVICE_NAME: processor
@@ -37,7 +36,7 @@ jobs:
         fetch-depth: 2
     - uses: actions/setup-python@v2
       with:
-        python-version: $PYTHON_VERSION
+        python-version: "3.10"
     - name: Build Lambda Package
       run: |
         echo "building $SERVICE_NAME lambda package(s)..."
