@@ -15,12 +15,12 @@ on:
     branches:
       - main
     paths:
-      - services/$SERVICE_NAME/**
+      - services/processor/**
   pull_request:
     branches:
       - main
     paths:
-      - services/$SERVICE_NAME/**
+      - services/processor/**
   
 jobs:
   build:
