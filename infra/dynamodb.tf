@@ -7,6 +7,11 @@ resource "aws_dynamodb_table" "cloud_custodian_policy_config" {
       name = "rule_id"
       type = "N"
     }
+    
+    attribute {
+      name = "is_active"
+      type = "S"
+    }
 
     global_secondary_index {
       name = "is_active_index"
