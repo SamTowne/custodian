@@ -16,6 +16,7 @@ on:
     - 'infra/**'
   workflow_run:
     workflows: ["Build Processor", "Build Scheduler"]
+    types: ["completed"]
 
 jobs:
   terraform:

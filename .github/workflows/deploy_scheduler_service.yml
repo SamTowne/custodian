@@ -14,12 +14,12 @@ on:
     branches:
       - "main"
     paths:
-    - 'services/$SERVICE_NAME/**'
+    - 'services/scheduler/**'
   pull_request:
     branches:
       - "main"
     paths:
-    - 'services/$SERVICE_NAME/**'
+    - 'services/scheduler/**'
   
 jobs:
   build-processor:
@@ -39,13 +39,13 @@ jobs:
         python-version: "3.10"
     - name: Build Lambda Package
       run: |
-        echo "building $SERVICE_NAME lambda package(s)..."
+        echo "building scheduler lambda package(s)..."
         mkdir app
         mkdir app/build
         pip install --target app/build/python --verbose --no-cache-dir c7n --upgrade
         echo "c7n installed..."
         ls -lsta app/build/python
-        cp -r services/$SERVICE_NAME/* app/build/python
+        cp -r services/scheduler/* app/build/python
         echo "lambda package contents..."
         ls -lsta app/build/python
         echo "compressing package contents..."
@@ -61,6 +61,6 @@ jobs:
     
     - name: Upload Lambda Package
       run: |
-        echo "Uploading $SERVICE_NAME lambda package..."
+        echo "Uploading scheduler lambda package..."
         pip install awscli
-        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/$SERVICE_NAME/app.zip --region us-west-2
+        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/scheduler/app.zip --region us-west-2
