@@ -4,7 +4,7 @@ permissions:
   contents: read # required to checkout the code from the repo
 
 env:
-  PYTHON_VERSION: 3.9.10
+  PYTHON_VERSION: 3.10
   OIDC_IAM_ROLE: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
   AWS_REGION: us-west-2
   SERVICE_NAME: processor
