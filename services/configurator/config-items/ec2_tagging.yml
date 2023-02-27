@@ -1,0 +1,7 @@
+- name: 'enforce tagging'
+- enabled: true
+- scheduled: true
+- takes-action: true
+- source: 'eventbridge'
+- trigger_event: 'eventbridge_scheduled_trigger'
+- policies: [enforce-tagging]

@@ -1,4 +1,4 @@
-name: 'Infrastructure'
+name: 'infrastructure'
 permissions:
   id-token: write # required to use OIDC authentication
   contents: read # required to checkout the code from the repo
@@ -15,7 +15,7 @@ on:
     paths:
     - 'infra/**'
   workflow_run:
-    workflows: ["Build Processor", "Build Scheduler"]
+    workflows: ["processor", "scheduler", "configurator"]
     types: ["completed"]
 
 jobs:
