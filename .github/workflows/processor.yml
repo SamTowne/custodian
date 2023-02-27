@@ -57,7 +57,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc
-        aws-region: $AWS_REGION #CONFIGURE THIS
+        aws-region: ${{ AWS_REGION }} #CONFIGURE THIS
         role-duration-seconds: 900
     
     - name: Upload Lambda Package
