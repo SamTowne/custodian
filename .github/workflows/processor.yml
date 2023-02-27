@@ -64,4 +64,4 @@ jobs:
       run: |
         echo "Uploading $SERVICE_NAME lambda package..."
         pip install awscli
-        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/$SERVICE_NAME/app.zip --region $AWS_REGION
+        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/$SERVICE_NAME/app.zip --region ${{ AWS_REGION }}
