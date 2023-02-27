@@ -4,7 +4,6 @@ permissions:
   contents: read # required to checkout the code from the repo
 
 env:
-  PYTHON_VERSION: 3.9
   OIDC_IAM_ROLE: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
   AWS_REGION: us-west-2
   SERVICE_NAME: processor
@@ -13,14 +12,14 @@ env:
 on:
   push:
     branches:
-      - "main"
+      - main
     paths:
-    - 'services/$SERVICE_NAME/**'
+      - services/processor/**
   pull_request:
     branches:
-      - "main"
+      - main
     paths:
-    - 'services/$SERVICE_NAME/**'
+      - services/processor/**
   
 jobs:
   build-processor:
@@ -37,7 +36,7 @@ jobs:
         fetch-depth: 2
     - uses: actions/setup-python@v2
       with:
-        python-version: $PYTHON_VERSION
+        python-version: "3.10"
     - name: Build Lambda Package
       run: |
         echo "building $SERVICE_NAME lambda package(s)..."
@@ -56,12 +55,12 @@ jobs:
       if: ${{ !github.event.act }} # skip during local actions testing
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: $OIDC_IAM_ROLE
-        aws-region: $AWS_REGION #CONFIGURE THIS
+        role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc
+        aws-region: us-west-2 #CONFIGURE THIS
         role-duration-seconds: 900
     
     - name: Upload Lambda Package
       run: |
         echo "Uploading $SERVICE_NAME lambda package..."
         pip install awscli
-        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/$SERVICE_NAME/app.zip --region $AWS_REGION
+        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/$SERVICE_NAME/app.zip --region us-west-2
