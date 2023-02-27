@@ -8,31 +8,6 @@ resource "aws_dynamodb_table" "cloud_custodian_policy_config" {
       type = "N"
     }
 
-    attribute {
-      name = "policy_name"
-      type = "S"
-    }
-
-    attribute {
-      name = "is_active"
-      type = "S"
-    }
-
-    attribute {
-      name = "take_action"
-      type = "S"
-    }
-
-    attribute {
-      name = "test_mode"
-      type = "S"
-    }
-
-    attribute {
-      name = "triggered_by"
-      type = "S"
-    }
-
     global_secondary_index {
       name = "is_active_index"
       hash_key = "is_active"
