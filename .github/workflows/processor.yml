@@ -6,7 +6,7 @@ permissions:
 env:
   OIDC_IAM_ROLE: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
   AWS_REGION: us-west-2
-  PYTHON_VERSION: 3.10
+  PYTHON_VERSION: 3.9.16
   SERVICE_NAME: processor
   S3_BUCKET_NAME: cloud-custodian-lambda-packages-272773485930
 
@@ -37,7 +37,7 @@ jobs:
         fetch-depth: 2
     - uses: actions/setup-python@v2
       with:
-        python-version: $PYTHON_VERSION
+        python-version: "3.9.16"
     - name: Build Lambda Package
       run: |
         echo "building $SERVICE_NAME lambda package(s)..."
