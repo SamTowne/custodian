@@ -56,11 +56,11 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: $OIDC_IAM_ROLE
-        aws-region: $AWS_REGION #CONFIGURE THIS
+        aws-region: us-west-2 #CONFIGURE THIS
         role-duration-seconds: 900
     
     - name: Upload Lambda Package
       run: |
         echo "Uploading $SERVICE_NAME lambda package..."
         pip install awscli
-        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/$SERVICE_NAME/app.zip --region $AWS_REGION
+        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/$SERVICE_NAME/app.zip --region us-west-2
