@@ -1,4 +1,4 @@
-name: 'Infrastructure'
+name: 'Manage Infrastructure'
 permissions:
   id-token: write # required to use OIDC authentication
   contents: read # required to checkout the code from the repo
@@ -14,9 +14,6 @@ on:
       - "main"
     paths:
     - 'infra/**'
-  workflow_run:
-    workflows: ["Build Processor", "Build Scheduler"]
-    types: ["completed"]
 
 jobs:
   terraform:

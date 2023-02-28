@@ -1,12 +1,10 @@
-name: 'Build Scheduler'
+name: 'Deploy Scheduler Service'
 permissions:
   id-token: write # required to use OIDC authentication
   contents: read # required to checkout the code from the repo
 
 env:
-  OIDC_IAM_ROLE: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
-  AWS_REGION: us-west-2
-  SERVICE_NAME: processor
+  SERVICE_NAME: scheduler
   S3_BUCKET_NAME: cloud-custodian-lambda-packages-272773485930
 
 on:
@@ -22,8 +20,8 @@ on:
     - 'services/scheduler/**'
   
 jobs:
-  build-processor:
-    name: 'Build Scheduler'
+  build:
+    name: 'Build'
     runs-on: ubuntu-latest
     environment: production
     defaults:
@@ -36,16 +34,13 @@ jobs:
         fetch-depth: 2
     - uses: actions/setup-python@v2
       with:
-        python-version: "3.10"
+        python-version: "3.9.16"
     - name: Build Lambda Package
       run: |
-        echo "building scheduler lambda package(s)..."
+        echo "building $SERVICE_NAME lambda package(s)..."
         mkdir app
         mkdir app/build
-        pip install --target app/build/python --verbose --no-cache-dir c7n --upgrade
-        echo "c7n installed..."
-        ls -lsta app/build/python
-        cp -r services/scheduler/* app/build/python
+        cp -r services/$SERVICE_NAME/* app/build/python
         echo "lambda package contents..."
         ls -lsta app/build/python
         echo "compressing package contents..."
@@ -56,11 +51,11 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc
-        aws-region: us-west-2 #CONFIGURE THIS
+        aws-region: us-west-2
         role-duration-seconds: 900
     
     - name: Upload Lambda Package
       run: |
-        echo "Uploading scheduler lambda package..."
+        echo "Uploading $SERVICE_NAME lambda package..."
         pip install awscli
-        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/scheduler/app.zip --region us-west-2
+        aws s3 cp app.zip s3://$S3_BUCKET_NAME/lambda_packages/$SERVICE_NAME/app.zip --region us-west-2

@@ -9,11 +9,11 @@ resource "aws_lambda_function" "cloud_custodian_processor" {
   publish       = true
   handler       = "listener.listener"
   runtime       = "python3.9"
-  description   = "Cloud Custodian events processor"
+  description   = "cloud_custodian_processor"
   memory_size   = "128"
   timeout       = "300"
   s3_bucket     = aws_s3_bucket.cloud_custodian_lambda_packages.bucket
-  s3_key        = "lambda_packages/processor/app.zip"
+  s3_key        = "lambda_packages/cloud_custodian_processor/app.zip"
 }
 
 resource "aws_lambda_alias" "cloud_custodian_processor" {
