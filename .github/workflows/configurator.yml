@@ -42,6 +42,7 @@ jobs:
         echo "building $SERVICE_NAME lambda package(s)..."
         mkdir app
         mkdir app/build
+        mkdir app/build/python
         cp -r services/$SERVICE_NAME/* app/build/python
         echo "lambda package contents..."
         ls -lsta app/build/python
