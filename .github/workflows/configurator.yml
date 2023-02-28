@@ -1,4 +1,4 @@
-name: 'configurator'
+name: 'Deploy Configurator Service'
 permissions:
   id-token: write # required to use OIDC authentication
   contents: read # required to checkout the code from the repo
@@ -6,7 +6,6 @@ permissions:
 env:
   OIDC_IAM_ROLE: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
   AWS_REGION: us-west-2
-  PYTHON_VERSION: "3.10"
   SERVICE_NAME: configurator
   S3_BUCKET_NAME: cloud-custodian-lambda-packages-272773485930
 
@@ -15,12 +14,12 @@ on:
     branches:
       - main
     paths:
-      - services/${{SERVICE_NAME}}/**
+      - services/configurator/**
   pull_request:
     branches:
       - main
     paths:
-      - services/${{SERVICE_NAME}}/**
+      - services/configurator/**
   
 jobs:
   build:
@@ -37,13 +36,13 @@ jobs:
         fetch-depth: 2
     - uses: actions/setup-python@v2
       with:
-        python-version: ${{PYTHON_VERSION}}
+        python-version: "3.9.16"
     - name: Build Lambda Package
       run: |
         echo "building $SERVICE_NAME lambda package(s)..."
         mkdir app
         mkdir app/build
-        cp -r services/${{SERVICE_NAME}}/* app/build/python
+        cp -r services/$SERVICE_NAME/* app/build/python
         echo "lambda package contents..."
         ls -lsta app/build/python
         echo "compressing package contents..."
@@ -53,8 +52,8 @@ jobs:
       if: ${{ !github.event.act }} # skip during local actions testing
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: ${{OIDC_IAM_ROLE}}
-        aws-region: us-west-2 #CONFIGURE THIS
+        role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc
+        aws-region: us-west-2
         role-duration-seconds: 900
     
     - name: Upload Lambda Package

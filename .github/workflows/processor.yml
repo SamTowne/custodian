@@ -1,12 +1,9 @@
-name: 'processor'
+name: 'Deploy Processor Service'
 permissions:
   id-token: write # required to use OIDC authentication
   contents: read # required to checkout the code from the repo
 
 env:
-  OIDC_IAM_ROLE: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
-  AWS_REGION: us-west-2
-  PYTHON_VERSION: 3.9.16
   SERVICE_NAME: processor
   S3_BUCKET_NAME: cloud-custodian-lambda-packages-272773485930
 
@@ -57,7 +54,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc
-        aws-region: us-west-2 #CONFIGURE THIS
+        aws-region: us-west-2
         role-duration-seconds: 900
     
     - name: Upload Lambda Package
