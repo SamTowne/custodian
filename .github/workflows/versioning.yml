@@ -28,8 +28,7 @@ jobs:
         echo ${GITHUB_REF}
         echo ${GITHUB_HEAD_REF}
         echo ${GITHUB_BASE_REF}
-        if [[ "${GITHUB_HEAD_REF}" =~ "${BRANCH_REGEX}"]]
-        then
+        if [[ "${GITHUB_HEAD_REF}" =~ ${BRANCH_REGEX}]]; then
             echo 'match'
         else
             echo 'no match'
