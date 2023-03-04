@@ -25,4 +25,4 @@ jobs:
       run: |
         BRANCH_REGEX='major|feature|bugfix'
         echo $BRANCH_REGEX
-        echo ${GITHUB_REF##*/}
+        echo ${GITHUB_REF}
