@@ -1,0 +1,26 @@
+name: 'Service Versioning'
+description: 'Check branch prefixes to auto-version services'
+
+on:
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  branch_prefix:
+    name: 'Check Branch Prefix'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Branch Prefix
+      run: |
+      BRANCH_REGEX='major|feature|bugfix'
+      git branch --show-current
+      echo BRANCH_REGEX
