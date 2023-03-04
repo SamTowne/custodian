@@ -1,5 +1,7 @@
 name: 'Service Versioning'
-description: 'Check branch prefixes to auto-version services'
+permissions:
+  id-token: write # required to use OIDC authentication
+  contents: read # required to checkout the code from the repo
 
 on:
   pull_request:
