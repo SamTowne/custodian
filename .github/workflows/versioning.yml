@@ -24,5 +24,6 @@ jobs:
     - name: Branch Prefix
       run: |
         BRANCH_REGEX='major|feature|bugfix'
-        git branch --show-current
-        echo BRANCH_REGEX
+        CURRENT_BRANCH='git branch --show-current'
+        echo $BRANCH_REGEX
+        echo $CURRENT_BRANCH
