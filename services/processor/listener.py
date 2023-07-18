@@ -7,6 +7,7 @@ from processor import app
 
 def listener(event, context):
     app.processor(event, None)
+    print("HI")
     return {"statusCode": 200}
 
 def health(val):

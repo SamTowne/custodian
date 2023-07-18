@@ -1,0 +1,11 @@
+- name: aws-baseline
+  resource: aws.rds
+  description: "Baseline"
+  filters:
+    - "tag:this-tag-will-never-exist": absent
+
+- name: aws-baseline
+  resource: lambda
+  description: "Baseline"
+  filters:
+    - "tag:this-tag-will-never-exist": absent
