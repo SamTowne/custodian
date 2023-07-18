@@ -13,7 +13,7 @@ resource "aws_lambda_function" "cloud_custodian_scheduler" {
   memory_size   = "128"
   timeout       = "300"
   s3_bucket     = aws_s3_bucket.cloud_custodian_lambda_packages.bucket
-  s3_key        = "lambda_packages/cloud_custodian_scheduler/app.zip"
+  s3_key        = "lambda_packages/scheduler/app.zip"
 }
 
 resource "aws_lambda_alias" "cloud_custodian_scheduler" {
