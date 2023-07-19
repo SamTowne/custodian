@@ -59,6 +59,7 @@ jobs:
     - name: Terraform Init
       id: init
       run: |
+       echo "${{ env.environment }}"
        terraform init \
        -backend-config="bucket=custodian-272773485930-terraform-tfstate" \
        -backend-config="key=${{ env.environment }}/terraform.tfstate" \
