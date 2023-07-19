@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # resource "aws_dynamodb_table" "cloud_custodian_policy_config" {
 #     name = "cloud_custodian_policy_config"
 #     hash_key = "rule_id"
