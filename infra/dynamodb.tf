@@ -1,8 +1,4 @@
 # resource "aws_dynamodb_table" "cloud_custodian_policy_config" {
-#     name = "cloud_custodian_policy_config"
-#     hash_key = "rule_id"
-#     billing_mode = "PAY_PER_REQUEST"
-# resource "aws_dynamodb_table" "cloud_custodian_policy_config" {
 #     name = "cloud_custodian_policy_config_${var.env}"
 #     hash_key = "rule_id"
 #     billing_mode = "PAY_PER_REQUEST"
