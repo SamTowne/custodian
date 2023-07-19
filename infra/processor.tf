@@ -1,10 +1,10 @@
 # resource "aws_cloudwatch_log_group" "cloud_custodian_processor" {
-#   name              = "/aws/lambda/cloud_custodian_processor"
+#   name              = "/aws/lambda/cloud_custodian_processor_${var.env}"
 #   retention_in_days = 90
 # }
 
 # resource "aws_lambda_function" "cloud_custodian_processor" {
-#   function_name = "cloud_custodian_processor"
+#   function_name = "cloud_custodian_processor_${var.env}"
 #   role          = module.lambda-iam.processor_role_arn
 #   publish       = true
 #   handler       = "listener.listener"

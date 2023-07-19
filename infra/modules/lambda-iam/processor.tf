@@ -1,10 +1,10 @@
 resource "aws_iam_role" "processor" {
-    name = "cloud_custodian_processor"
+    name = "cloud_custodian_processor_${var.env}"
     assume_role_policy = data.aws_iam_policy_document.processor_trust.json
 }
 
 resource "aws_iam_role_policy" "processor" {
-    name = "cloud_custodian_processor"
+    name = "cloud_custodian_processor_${var.env}"
     role = aws_iam_role.processor.id
     policy = data.aws_iam_policy_document.processor_policy.json
 }
