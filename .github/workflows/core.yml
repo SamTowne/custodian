@@ -1,4 +1,4 @@
-name: 'Manage Infrastructure'
+name: 'Core'
 permissions:
   id-token: write # required to use OIDC authentication
   contents: read # required to checkout the code from the repo

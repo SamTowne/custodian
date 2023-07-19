@@ -4,14 +4,14 @@
 
 # Build an S3 bucket and DynamoDB for Terraform state and locking
 module "bootstrap" {
-  source         = "../modules/bootstrap"
+  source         = "./modules/bootstrap"
   project_prefix = "custodian-272773485930"
 }
 
 # Build the IAM needed for github actions CICD
 # **IMPORTANT** Configuring this part incorrectly can compromise your AWS account, don't touch this unless you are comfortable with OIDC and federation concepts.
 module "github-actions-iam" {
-  source           = "../modules/github-actions-iam"
+  source           = "./modules/github-actions-iam"
   project_prefix   = "custodian-272773485930"
   github_workspace = "SamTowne"
   github_repo      = "custodian"
