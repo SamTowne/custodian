@@ -36,10 +36,13 @@ jobs:
       run: |
         prod="{{ github.event.pull_request.base.ref == 'main'  || github.ref == 'refs/head/main' }}"
         if [ "$prod" = true ]; then
+          echo setting infrastructure environment to prod
           echo "environment=prod" >> $GITHUB_OUTPUT
         else
+          echo setting infrastructure environment to dev
           echo "environment=dev" >> $GITHUB_OUTPUT
         fi
+        echo $GITHUB_OUTPUT
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
