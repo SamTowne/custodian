@@ -36,9 +36,9 @@ jobs:
       run: |
         prod="{{ github.event.pull_request.base.ref == 'main'  || github.ref == 'refs/head/main' }}"
         if [ "$prod" = true ]; then
-          echo "::set-output env=prod"
+          echo "environment=prod" >> $GITHUB_OUTPUT
         else
-          echo "::set-output env=dev"
+          echo "environment=dev" >> $GITHUB_OUTPUT
         fi
 
     - name: Setup Terraform
@@ -58,7 +58,7 @@ jobs:
       run: |
        terraform init \
        -backend-config="bucket=custodian-272773485930-terraform-tfstate" \
-       -backend-config="key=${{ steps.get_env.outputs.env }}/terraform.tfstate" \
+       -backend-config="key=${{ env.environment }}/terraform.tfstate" \
        -backend-config="region=us-west-2" \
        -backend-config="encrypt=true"
 
@@ -76,7 +76,7 @@ jobs:
     - name: Terraform Plan
       id: plan
       if: github.event_name == 'pull_request'
-      run: terraform plan -no-color -var "env=${{ steps.get_env.outputs.env }}"
+      run: terraform plan -no-color -var "env=${{ env.environment }}"
       continue-on-error: true
 
     - name: Terraform Plan Status
@@ -84,5 +84,5 @@ jobs:
       run: exit 1
 
     - name: Terraform Apply
-      if: github.ref == "refs/heads/${{ steps.get_env.outputs.env }}" && github.event_name == 'push'
-      run: terraform apply -auto-approve -state="${{ steps.get_env.outputs.env }}-terraform.tfstate"
+      if: github.ref == "refs/heads/${{ env.environment }}" && github.event_name == 'push'
+      run: terraform apply -auto-approve -state="${{ env.environment }}-terraform.tfstate"
