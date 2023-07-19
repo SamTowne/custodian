@@ -7,11 +7,13 @@ on:
   push:
     branches:
       - "main"
+      - "dev"
     paths:
     - 'infra/**'
   pull_request:
     branches:
       - "main"
+      - "dev"
     paths:
     - 'infra/**'
 
@@ -25,10 +27,19 @@ jobs:
       run:
         working-directory: ./infra
         shell: bash
-
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    
+    - name: Get Environment
+      id: get_env
+      run: |
+        prod="{{ github.event.pull_request.base.ref == 'main'  || github.ref == 'refs/head/main' }}"
+        if [ "$prod" = true ]; then
+          echo "::set-output env=prod"
+        else
+          echo "::set-output env=dev"
+        fi
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -62,11 +73,13 @@ jobs:
       if: github.event_name == 'pull_request'
       run: terraform plan -no-color
       continue-on-error: true
+      env:
+        env: ${{ steps.get_env.outputs.env }}
 
     - name: Terraform Plan Status
       if: steps.plan.outcome == 'failure'
       run: exit 1
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/${{ steps.get_env.outputs.env }}' && github.event_name == 'push'
       run: terraform apply -auto-approve
