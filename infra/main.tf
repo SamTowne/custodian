@@ -26,8 +26,3 @@ provider "aws" {
     }
   }
 }
-
-locals {
-  project_suffix = "${var.env}-custodian-272773485930"
-  env = var.env
-}

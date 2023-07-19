@@ -46,7 +46,3 @@ terraform {
     encrypt        = true
   }
 }
-
-locals {
-  project_suffix = "custodian-272773485930"
-}
