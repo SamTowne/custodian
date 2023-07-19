@@ -42,7 +42,7 @@ jobs:
           echo setting infrastructure environment to dev
           echo "environment=dev" >> $GITHUB_OUTPUT
         fi
-        echo $GITHUB_OUTPUT
+        cat $GITHUB_OUTPUT
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
