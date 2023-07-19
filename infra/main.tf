@@ -29,7 +29,7 @@ module "github-actions-iam" {
 terraform {
   backend "s3" {
     bucket         = "custodian-272773485930-terraform-tfstate"
-    key            = "${var.env}/terraform.tfstate"
+    key            = "${local.env}/terraform.tfstate"
     region         = "us-west-2"
     dynamodb_table = "custodian-272773485930-dynamodb-terraform-locking"
     encrypt        = true
@@ -56,4 +56,5 @@ provider "aws" {
 
 locals {
   project_suffix = "${var.env}-custodian-272773485930"
+  env = var.env
 }
