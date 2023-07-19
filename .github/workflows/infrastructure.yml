@@ -87,5 +87,4 @@ jobs:
       run: exit 1
 
     - name: Terraform Apply
-      if: github.ref == "refs/heads/${{ steps.get_env.outputs.environment }}" && github.event_name == 'push'
-      run: terraform apply -auto-approve -state="${{ steps.get_env.outputs.environment }}-terraform.tfstate"
+      run: terraform apply -auto-approve -state="${{ steps.get_env.outputs.environment }}/terraform.tfstate"
