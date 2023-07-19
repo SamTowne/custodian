@@ -45,7 +45,12 @@ jobs:
 
     - name: Terraform Init
       id: init
-      run: terraform init
+      run: |
+       terraform init \
+       -backend-config="bucket=custodian-272773485930-terraform-tfstate" \
+       -backend-config="key=$core/terraform.tfstate" \
+       -backend-config="region=us-west-2" \
+       -backend-config="encrypt=true"
 
     - name: Terraform Format
       id: fmt
@@ -62,11 +67,6 @@ jobs:
       id: plan
       if: github.event_name == 'pull_request'
       run: terraform plan -no-color"
-      continue-on-error: true
-
-    - name: Terraform Plan Status
-      if: steps.plan.outcome == 'failure'
-      run: exit 1
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -state="core/terraform.tfstate"
