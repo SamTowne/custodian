@@ -57,10 +57,10 @@ jobs:
       id: init
       run: |
        terraform init \
-       =backend-config="bucket=custodian-272773485930-terraform-tfstate" \
-       =backend-config="key=${{ steps.get_env.outputs.env }}/terraform.tfstate" \
-       =backend-config="region=us-west-2" \
-       =backend-config="encrypt=true"
+       -backend-config="bucket=custodian-272773485930-terraform-tfstate" \
+       -backend-config="key=${{ steps.get_env.outputs.env }}/terraform.tfstate" \
+       -backend-config="region=us-west-2" \
+       -backend-config="encrypt=true"
 
     - name: Terraform Format
       id: fmt
