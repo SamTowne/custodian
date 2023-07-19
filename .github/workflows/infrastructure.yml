@@ -71,15 +71,13 @@ jobs:
     - name: Terraform Plan
       id: plan
       if: github.event_name == 'pull_request'
-      run: terraform plan -no-color
+      run: terraform plan -no-color -var "env=${{ steps.get_env.outputs.env }}"
       continue-on-error: true
-      env:
-        env: ${{ steps.get_env.outputs.env }}
 
     - name: Terraform Plan Status
       if: steps.plan.outcome == 'failure'
       run: exit 1
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/${{ steps.get_env.outputs.env }}' && github.event_name == 'push'
-      run: terraform apply -auto-approve
+      if: github.ref == "refs/heads/${{ steps.get_env.outputs.env }}" && github.event_name == 'push'
+      run: terraform apply -auto-approve -state="${{ steps.get_env.outputs.env }}-terraform.tfstate"
