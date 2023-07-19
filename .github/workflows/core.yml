@@ -40,7 +40,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
-        aws-region: us-west-2 #CONFIGURE THIS
+        aws-region: us-west-2 #CONFIGURE THIS#
         role-duration-seconds: 900
 
     - name: Terraform Init
