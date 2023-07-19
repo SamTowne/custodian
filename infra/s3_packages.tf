@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "cloud_custodian_lambda_packages" {
-  bucket = "cloud-custodian-${var.env}-lambda-packages-272773485930"
+  bucket = "cloud-custodian-lambda-packages-272773485930"
 }
 
 resource "aws_s3_bucket_acl" "cloud_custodian_lambda_packages" {
@@ -39,6 +39,6 @@ data "aws_iam_policy_document" "cloud_custodian_lambda_packages" {
       "s3:PutObject*",
       "s3:GetObject*",
     ]
-    resources = ["arn:aws:s3:::cloud-custodian-${var.env}-lambda-packages-272773485930"]
+    resources = ["arn:aws:s3:::cloud-custodian-lambda-packages-272773485930"]
   }
 }
