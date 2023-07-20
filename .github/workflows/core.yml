@@ -1,4 +1,4 @@
-name: 'Infrastructure'
+name: 'Core'
 permissions:
   id-token: write # required to use OIDC authentication
   contents: read # required to checkout the code from the repo
@@ -9,13 +9,13 @@ on:
       - "main"
       - "dev"
     paths:
-    - 'infra/**'
+    - 'core/**'
   pull_request:
     branches:
       - "main"
       - "dev"
     paths:
-    - 'infra/**'
+    - 'core/**'
 
 jobs:
   terraform:
@@ -25,24 +25,11 @@ jobs:
     environment: production
     defaults:
       run:
-        working-directory: ./infra
+        working-directory: ./core
         shell: bash
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    
-    - name: Get Environment
-      id: get_env
-      run: |
-        prod="{{ github.event.pull_request.base.ref == 'main'  || github.ref == 'refs/head/main' }}"
-        if [ "$prod" = true ]; then
-          echo setting infrastructure environment to prod
-          echo "environment=prod" >> $GITHUB_OUTPUT
-        else
-          echo setting infrastructure environment to dev
-          echo "environment=dev" >> $GITHUB_OUTPUT
-        fi
-        cat $GITHUB_OUTPUT
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -53,7 +40,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::272773485930:role/custodian-272773485930-github-oidc #CONFIGURE THIS for the role created in ./modules/github-actions-iam/iam.tf
-        aws-region: us-west-2 #CONFIGURE THIS
+        aws-region: us-west-2 #CONFIGURE THIS#
         role-duration-seconds: 900
 
     - name: Terraform Init
@@ -61,7 +48,7 @@ jobs:
       run: |
        terraform init \
        -backend-config="bucket=custodian-272773485930-terraform-tfstate" \
-       -backend-config="key=${{ steps.get_env.outputs.environment }}/terraform.tfstate" \
+       -backend-config="key=core/terraform.tfstate" \
        -backend-config="region=us-west-2" \
        -backend-config="encrypt=true"
 
@@ -79,12 +66,7 @@ jobs:
     - name: Terraform Plan
       id: plan
       if: github.event_name == 'pull_request'
-      run: terraform plan -no-color -var "env=${{ steps.get_env.outputs.environment }}"
-      continue-on-error: true
-
-    - name: Terraform Plan Status
-      if: steps.plan.outcome == 'failure'
-      run: exit 1
+      run: terraform plan -no-color
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve -state="${{ steps.get_env.outputs.environment }}/terraform.tfstate"
+      run: terraform apply -auto-approve -state='core/terraform.tfstate'

@@ -1,10 +1,10 @@
 resource "aws_iam_role" "scheduler" {
-    name = "cloud_custodian_scheduler"
+    name = "cloud_custodian_scheduler_${var.env}"
     assume_role_policy = data.aws_iam_policy_document.scheduler_trust.json
 }
 
 resource "aws_iam_role_policy" "scheduler" {
-    name = "cloud_custodian_scheduler"
+    name = "cloud_custodian_scheduler${var.env}"
     role = aws_iam_role.scheduler.id
     policy = data.aws_iam_policy_document.scheduler_policy.json
 }
